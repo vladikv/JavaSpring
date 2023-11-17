@@ -1,6 +1,8 @@
 import {useEffect, useState} from "react";
 import {ICategoryItem} from "./types.ts";
 import http_common from "../../../../../http_common.ts";
+import {Link} from "react-router-dom";
+import ModalDelete from "../../../common/ModalDelete.tsx";
 
 const CategoryListPage = () => {
     const [list, setList] = useState<ICategoryItem[]>([]);
@@ -15,6 +17,17 @@ const CategoryListPage = () => {
     useEffect(()=>{
         getData();
     });
+
+    const handleDelete = async (id: number) => {
+        try {
+            await http_common.delete(`/api/category/${id}`).then(() => {
+                getData();
+            });
+        } catch (error) {
+            console.error("Error deleting category:", error);
+        }
+    };
+
     const content = list.map(item=>(
         <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={item.id}>
             <th scope="row"
@@ -29,14 +42,15 @@ const CategoryListPage = () => {
             </td>
             <td className="px-6 py-4">
                 <button
-                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                    className="mr-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
                     Змінить
                 </button>
 
-                <button
-                    className="ml-2 bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">
-                    Видалить
-                </button>
+                <ModalDelete
+                    id={item.id}
+                    text={item.name}
+                    deleteFunc={handleDelete}
+                ></ModalDelete>
             </td>
         </tr>
     ))
@@ -47,6 +61,12 @@ const CategoryListPage = () => {
                     Список категорій
                 </h1>
             </div>
+
+            <Link to={"/create"}
+                  className=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            >
+                Create
+            </Link>
 
             <div className="mt-6 relative overflow-x-auto">
 

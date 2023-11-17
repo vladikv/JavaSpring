@@ -112,10 +112,10 @@ public class CategoryController {
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/api/category/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable int id) {
         var catOptional = categoryRepository.findById(id);
-        if(!catOptional.isPresent()) {
+        if(catOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         var category = catOptional.get();
