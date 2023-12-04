@@ -3,6 +3,8 @@ package org.example.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name="tbl_categories")
@@ -16,4 +18,7 @@ public class CategoryEntity {
     private String description;
     @Column(name="image", length = 200, nullable = true)
     private String image;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<ProductEntity> products;
 }
